@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XOPIA — Automation Agency</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&display=swap');
+
+  :root {
+    --negro: #000000;
+    --negro2: #050505;
+    --negro3: #080808;
+    --champagne: #C8B88A;
+    --champagne-light: #E8DCC8;
+    --champagne-pale: #F0EAD8;
+    --gris: #111111;
+    --gris2: #1a1a1a;
+    --gris3: #222222;
+    --texto: #888888;
+    --texto2: #555555;
+    --blanco: #F5F5F5;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--negro);
+    color: var(--blanco);
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── CURSOR ── */
+  * { cursor: none; }
+  .cursor {
+    position: fixed;
+    width: 6px; height: 6px;
+    background: var(--champagne);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease;
+    transform: translate(-50%, -50%);
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 28px; height: 28px;
+    border: 1px solid rgba(200,184,138,0.3);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.4s ease, width 0.3s, height 0.3s;
+    transform: translate(-50%, -50%);
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 28px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(180deg, rgba(0,0,0,0.9) 0%, transparent 100%);
+    backdrop-filter: blur(10px);
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+  }
+
+  .nav-logo-text {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 200;
+    font-size: 16px;
+    letter-spacing: 8px;
+    color: var(--champagne-light);
+    text-indent: 8px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 3px;
+    color: var(--texto);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--champagne); }
+
+  .nav-cta {
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 3px;
+    color: var(--negro);
+    background: var(--champagne);
+    padding: 10px 24px;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: opacity 0.3s;
+  }
+
+  .nav-cta:hover { opacity: 0.8; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 120px 24px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 20%; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 400px;
+    background: radial-gradient(ellipse, rgba(200,184,138,0.04) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-tag {
+    font-size: 9px;
+    font-weight: 200;
+    letter-spacing: 6px;
+    color: var(--champagne);
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 1s 0.2s forwards;
+  }
+
+  .hero-logo {
+    margin-bottom: 40px;
+    opacity: 0;
+    animation: fadeUp 1s 0.4s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(42px, 8vw, 80px);
+    line-height: 1.1;
+    color: var(--champagne-pale);
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 1s 0.6s forwards;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--champagne);
+  }
+
+  .hero-sub {
+    font-size: 12px;
+    font-weight: 200;
+    letter-spacing: 2px;
+    color: var(--texto);
+    max-width: 480px;
+    line-height: 2;
+    margin-bottom: 56px;
+    opacity: 0;
+    animation: fadeUp 1s 0.8s forwards;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    opacity: 0;
+    animation: fadeUp 1s 1s forwards;
+  }
+
+  .btn-primary {
+    font-size: 10px;
+    font-weight: 300;
+    letter-spacing: 4px;
+    color: var(--negro);
+    background: var(--champagne);
+    padding: 16px 40px;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: all 0.3s;
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    background: var(--champagne-light);
+    transform: translateY(-2px);
+  }
+
+  .btn-secondary {
+    font-size: 10px;
+    font-weight: 200;
+    letter-spacing: 4px;
+    color: var(--texto);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.3s;
+    border-bottom: 1px solid var(--gris3);
+    padding-bottom: 2px;
+  }
+
+  .btn-secondary:hover { color: var(--champagne); }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    animation: fadeUp 1s 1.4s forwards;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(180deg, transparent, var(--champagne), transparent);
+    animation: scrollPulse 2s infinite;
+  }
+
+  .scroll-text {
+    font-size: 8px;
+    letter-spacing: 4px;
+    color: var(--texto2);
+    text-transform: uppercase;
+  }
+
+  /* ── PROBLEMA ── */
+  .problema {
+    padding: 120px 48px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .section-tag {
+    font-size: 9px;
+    font-weight: 200;
+    letter-spacing: 6px;
+    color: var(--champagne);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: block;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(32px, 5vw, 52px);
+    line-height: 1.2;
+    color: var(--champagne-pale);
+    margin-bottom: 48px;
+  }
+
+  .section-title em { font-style: italic; color: var(--champagne); }
+
+  .problema-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1px;
+    background: var(--gris2);
+    border: 1px solid var(--gris2);
+  }
+
+  .problema-item {
+    background: var(--negro2);
+    padding: 40px 32px;
+    transition: background 0.3s;
+  }
+
+  .problema-item:hover { background: var(--gris); }
+
+  .problema-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    font-weight: 300;
+    color: var(--gris3);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .problema-titulo {
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    color: var(--champagne-light);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+
+  .problema-texto {
+    font-size: 12px;
+    font-weight: 200;
+    color: var(--texto);
+    line-height: 1.8;
+  }
+
+  /* ── SOLUCIÓN ── */
+  .solucion {
+    padding: 120px 48px;
+    background: var(--negro2);
+    border-top: 1px solid var(--gris2);
+    border-bottom: 1px solid var(--gris2);
+  }
+
+  .solucion-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .solucion-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+    margin-bottom: 80px;
+  }
+
+  .solucion-texto {
+    font-size: 13px;
+    font-weight: 200;
+    color: var(--texto);
+    line-height: 2;
+  }
+
+  .solucion-highlight {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 300;
+    font-style: italic;
+    color: var(--champagne);
+    line-height: 1.5;
+    border-left: 1px solid var(--champagne);
+    padding-left: 24px;
+    opacity: 0.8;
+  }
+
+  /* ── SERVICIOS ── */
+  .servicios {
+    padding: 120px 48px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .servicios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    margin-top: 64px;
+  }
+
+  .servicio-card {
+    border: 1px solid var(--gris2);
+    padding: 40px 32px;
+    transition: all 0.4s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .servicio-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: var(--champagne);
+    transform: scaleX(0);
+    transition: transform 0.4s;
+    transform-origin: left;
+  }
+
+  .servicio-card:hover::before { transform: scaleX(1); }
+  .servicio-card:hover { border-color: var(--gris3); background: var(--negro2); }
+
+  .servicio-icon {
+    font-size: 24px;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .servicio-nombre {
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 3px;
+    color: var(--champagne-light);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  .servicio-desc {
+    font-size: 12px;
+    font-weight: 200;
+    color: var(--texto);
+    line-height: 1.8;
+    margin-bottom: 24px;
+  }
+
+  .servicio-precio {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--champagne);
+  }
+
+  .servicio-precio span {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    font-weight: 200;
+    color: var(--texto2);
+    letter-spacing: 2px;
+  }
+
+  /* ── STATS ── */
+  .stats {
+    padding: 80px 48px;
+    background: var(--negro2);
+    border-top: 1px solid var(--gris2);
+    border-bottom: 1px solid var(--gris2);
+  }
+
+  .stats-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--gris2);
+  }
+
+  .stat-item {
+    background: var(--negro2);
+    padding: 40px 32px;
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px;
+    font-weight: 300;
+    color: var(--champagne);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .stat-label {
+    font-size: 9px;
+    font-weight: 200;
+    letter-spacing: 3px;
+    color: var(--texto2);
+    text-transform: uppercase;
+  }
+
+  /* ── PROCESO ── */
+  .proceso {
+    padding: 120px 48px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .proceso-steps {
+    margin-top: 64px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .paso {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 40px;
+    padding: 40px 0;
+    border-bottom: 1px solid var(--gris2);
+    align-items: start;
+    transition: all 0.3s;
+  }
+
+  .paso:hover .paso-num { color: var(--champagne); }
+
+  .paso-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px;
+    font-weight: 300;
+    color: var(--gris3);
+    line-height: 1;
+    transition: color 0.3s;
+  }
+
+  .paso-content {}
+
+  .paso-titulo {
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 3px;
+    color: var(--champagne-light);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .paso-desc {
+    font-size: 12px;
+    font-weight: 200;
+    color: var(--texto);
+    line-height: 1.8;
+  }
+
+  .paso-tiempo {
+    font-size: 9px;
+    font-weight: 200;
+    letter-spacing: 3px;
+    color: var(--champagne);
+    text-transform: uppercase;
+    margin-top: 12px;
+  }
+
+  /* ── SOBRE MÍ ── */
+  .sobre {
+    padding: 120px 48px;
+    background: var(--negro2);
+    border-top: 1px solid var(--gris2);
+  }
+
+  .sobre-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .sobre-foto {
+    aspect-ratio: 3/4;
+    background: var(--gris);
+    border: 1px solid var(--gris2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sobre-foto-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .sobre-foto-icon {
+    font-size: 48px;
+    opacity: 0.15;
+  }
+
+  .sobre-foto-text {
+    font-size: 9px;
+    letter-spacing: 4px;
+    color: var(--texto2);
+    text-transform: uppercase;
+  }
+
+  .sobre-foto-badge {
+    position: absolute;
+    bottom: 24px;
+    right: 24px;
+    background: var(--champagne);
+    color: var(--negro);
+    font-size: 8px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 8px 14px;
+  }
+
+  .sobre-texto {}
+
+  .sobre-nombre {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 42px;
+    font-weight: 300;
+    color: var(--champagne-pale);
+    margin-bottom: 8px;
+    line-height: 1.1;
+  }
+
+  .sobre-cargo {
+    font-size: 9px;
+    font-weight: 200;
+    letter-spacing: 5px;
+    color: var(--champagne);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  .sobre-bio {
+    font-size: 13px;
+    font-weight: 200;
+    color: var(--texto);
+    line-height: 2;
+    margin-bottom: 40px;
+  }
+
+  .sobre-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .tag {
+    font-size: 9px;
+    font-weight: 200;
+    letter-spacing: 2px;
+    color: var(--texto2);
+    border: 1px solid var(--gris3);
+    padding: 6px 14px;
+    text-transform: uppercase;
+  }
+
+  /* ── CTA FINAL ── */
+  .cta-final {
+    padding: 140px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-final::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px; height: 300px;
+    background: radial-gradient(ellipse, rgba(200,184,138,0.05) 0%, transparent 70%);
+  }
+
+  .cta-titulo {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(36px, 6vw, 64px);
+    color: var(--champagne-pale);
+    margin-bottom: 24px;
+    line-height: 1.1;
+  }
+
+  .cta-titulo em { font-style: italic; color: var(--champagne); }
+
+  .cta-sub {
+    font-size: 12px;
+    font-weight: 200;
+    color: var(--texto);
+    letter-spacing: 2px;
+    margin-bottom: 48px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 2;
+  }
+
+  .cta-whatsapp {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--champagne);
+    color: var(--negro);
+    text-decoration: none;
+    padding: 18px 48px;
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    transition: all 0.3s;
+  }
+
+  .cta-whatsapp:hover {
+    background: var(--champagne-light);
+    transform: translateY(-3px);
+    box-shadow: 0 20px 60px rgba(200,184,138,0.15);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 40px 48px;
+    border-top: 1px solid var(--gris2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .footer-logo {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 200;
+    font-size: 14px;
+    letter-spacing: 8px;
+    color: var(--champagne);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 32px;
+  }
+
+  .footer-links a {
+    font-size: 9px;
+    font-weight: 200;
+    letter-spacing: 3px;
+    color: var(--texto2);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.3s;
+  }
+
+  .footer-links a:hover { color: var(--champagne); }
+
+  .footer-copy {
+    font-size: 9px;
+    font-weight: 200;
+    letter-spacing: 2px;
+    color: var(--texto2);
+  }
+
+  /* ── ANIMACIONES ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    .nav-links { display: none; }
+    .problema { padding: 80px 24px; }
+    .solucion { padding: 80px 24px; }
+    .solucion-header { grid-template-columns: 1fr; gap: 40px; }
+    .servicios { padding: 80px 24px; }
+    .stats-inner { grid-template-columns: repeat(2, 1fr); }
+    .proceso { padding: 80px 24px; }
+    .sobre { padding: 80px 24px; }
+    .sobre-inner { grid-template-columns: 1fr; gap: 40px; }
+    .cta-final { padding: 100px 24px; }
+    footer { padding: 32px 24px; flex-direction: column; text-align: center; }
+    .footer-links { flex-wrap: wrap; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <svg width="32" height="19" viewBox="0 0 180 108" fill="none">
+      <defs>
+        <linearGradient id="navGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#E8DCC8"/>
+          <stop offset="50%" style="stop-color:#C8B88A"/>
+          <stop offset="100%" style="stop-color:#E8DCC8"/>
+        </linearGradient>
+      </defs>
+      <path d="M 20 20 C 20 20, 50 20, 70 54 C 90 88, 110 88, 140 54 C 160 28, 160 20, 160 20" stroke="url(#navGrad)" stroke-width="3" stroke-linecap="round" fill="none"/>
+      <path d="M 20 88 C 20 88, 50 88, 70 54 C 90 20, 110 20, 140 54 C 160 80, 160 88, 160 88" stroke="url(#navGrad)" stroke-width="3" stroke-linecap="round" fill="none"/>
+    </svg>
+    <span class="nav-logo-text">XOPIA</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#servicios">Servicios</a></li>
+    <li><a href="#proceso">Proceso</a></li>
+    <li><a href="#nosotros">Nosotros</a></li>
+  </ul>
+  <a href="https://wa.me/32613957919" class="nav-cta">Contactar</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <span class="hero-tag">Barcelona · Automation Agency</span>
+
+  <div class="hero-logo">
+    <svg width="100" height="60" viewBox="0 0 180 108" fill="none">
+      <defs>
+        <linearGradient id="heroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#E8DCC8"/>
+          <stop offset="40%" style="stop-color:#C8B88A"/>
+          <stop offset="100%" style="stop-color:#E8DCC8"/>
+        </linearGradient>
+      </defs>
+      <path d="M 20 20 C 20 20, 50 20, 70 54 C 90 88, 110 88, 140 54 C 160 28, 160 20, 160 20" stroke="url(#heroGrad)" stroke-width="2.5" stroke-linecap="round" fill="none" filter="drop-shadow(0 0 20px rgba(200,184,138,0.3))"/>
+      <path d="M 20 88 C 20 88, 50 88, 70 54 C 90 20, 110 20, 140 54 C 160 80, 160 88, 160 88" stroke="url(#heroGrad)" stroke-width="2.5" stroke-linecap="round" fill="none" filter="drop-shadow(0 0 20px rgba(200,184,138,0.3))"/>
+      <circle cx="90" cy="54" r="2.5" fill="#C8B88A" opacity="0.6"/>
+    </svg>
+  </div>
+
+  <h1 class="hero-title">
+    Tu negocio trabaja.<br>
+    <em>Incluso cuando tú no.</em>
+  </h1>
+
+  <p class="hero-sub">
+    Automatizamos la atención al cliente, reservas y pedidos de tu negocio con inteligencia artificial. 24 horas. Sin errores. Sin costes de personal.
+  </p>
+
+  <div class="hero-actions">
+    <a href="https://wa.me/32613957919" class="btn-primary">Ver demo gratuita</a>
+    <a href="#servicios" class="btn-secondary">Conocer servicios</a>
+  </div>
+
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span class="scroll-text">Scroll</span>
+  </div>
+</section>
+
+<!-- PROBLEMA -->
+<section class="problema">
+  <span class="section-tag">El problema</span>
+  <h2 class="section-title">
+    Cada mensaje sin respuesta<br>
+    es dinero que <em>se va a la competencia.</em>
+  </h2>
+  <div class="problema-grid">
+    <div class="problema-item">
+      <div class="problema-num">01</div>
+      <div class="problema-titulo">Clientes perdidos</div>
+      <p class="problema-texto">Un cliente escribe a las 11 de la noche pidiendo reserva. Nadie contesta. Al día siguiente reserva en otro sitio. Eso pasa cada día.</p>
+    </div>
+    <div class="problema-item">
+      <div class="problema-num">02</div>
+      <div class="problema-titulo">Tiempo desperdiciado</div>
+      <p class="problema-texto">Contestar siempre las mismas preguntas, confirmar reservas, gestionar horarios. Tu tiempo vale demasiado para esto.</p>
+    </div>
+    <div class="problema-item">
+      <div class="problema-num">03</div>
+      <div class="problema-titulo">Miles de euros al mes</div>
+      <p class="problema-texto">En hostelería, 4 mesas perdidas a la semana son más de 3.000 euros al mes. Un dinero que existe pero que nadie ve desaparecer.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUCIÓN CON WORKFLOW -->
+<section class="solucion">
+  <div class="solucion-inner">
+    <span class="section-tag">La solución</span>
+    <div class="solucion-header">
+      <h2 class="section-title">
+        Un sistema que<br>
+        <em>nunca duerme.</em>
+      </h2>
+      <p class="solucion-highlight">
+        "Instalamos inteligencia artificial en tu negocio. Responde, agenda y gestiona solo. En 48 horas."
+      </p>
+    </div>
+    <p class="solucion-texto">
+      Nuestros sistemas leen cada mensaje, entienden qué necesita el cliente, responden de forma personalizada y confirman la reserva o el pedido — todo sin intervención humana. Funciona con WhatsApp, Instagram y cualquier canal donde estén tus clientes.
+    </p>
+
+    <!-- WORKFLOW VISUAL -->
+    <div class="workflow">
+      <div class="wf-step">
+        <div class="wf-icon">💬</div>
+        <div class="wf-label">Cliente escribe</div>
+        <div class="wf-sub">WhatsApp · Instagram · Web</div>
+      </div>
+      <div class="wf-arrow">
+        <div class="wf-arrow-line"></div>
+        <div class="wf-arrow-dot"></div>
+      </div>
+      <div class="wf-step wf-highlight">
+        <div class="wf-icon">🤖</div>
+        <div class="wf-label">IA analiza</div>
+        <div class="wf-sub">Entiende la intención en segundos</div>
+      </div>
+      <div class="wf-arrow">
+        <div class="wf-arrow-line"></div>
+        <div class="wf-arrow-dot"></div>
+      </div>
+      <div class="wf-step">
+        <div class="wf-icon">⚡</div>
+        <div class="wf-label">Responde solo</div>
+        <div class="wf-sub">Personalizado · Instantáneo</div>
+      </div>
+      <div class="wf-arrow">
+        <div class="wf-arrow-line"></div>
+        <div class="wf-arrow-dot"></div>
+      </div>
+      <div class="wf-step">
+        <div class="wf-icon">📅</div>
+        <div class="wf-label">Reserva confirmada</div>
+        <div class="wf-sub">Sin tocar el teléfono</div>
+      </div>
+      <div class="wf-arrow">
+        <div class="wf-arrow-line"></div>
+        <div class="wf-arrow-dot"></div>
+      </div>
+      <div class="wf-step wf-highlight">
+        <div class="wf-icon">🔔</div>
+        <div class="wf-label">Tú recibes aviso</div>
+        <div class="wf-sub">Solo lo importante llega a ti</div>
+      </div>
+    </div>
+
+    <div class="wf-footer">
+      <div class="wf-footer-item">
+        <span class="wf-footer-num">24/7</span>
+        <span class="wf-footer-text">Sin descanso</span>
+      </div>
+      <div class="wf-footer-divider"></div>
+      <div class="wf-footer-item">
+        <span class="wf-footer-num">&lt;5s</span>
+        <span class="wf-footer-text">Tiempo de respuesta</span>
+      </div>
+      <div class="wf-footer-divider"></div>
+      <div class="wf-footer-item">
+        <span class="wf-footer-num">0</span>
+        <span class="wf-footer-text">Errores humanos</span>
+      </div>
+      <div class="wf-footer-divider"></div>
+      <div class="wf-footer-item">
+        <span class="wf-footer-num">∞</span>
+        <span class="wf-footer-text">Conversaciones simultáneas</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICIOS -->
+<section class="servicios" id="servicios">
+  <span class="section-tag">Servicios</span>
+  <h2 class="section-title">
+    Lo que instalamos<br>
+    en tu <em>negocio.</em>
+  </h2>
+  <div class="servicios-grid">
+    <div class="servicio-card">
+      <span class="servicio-icon">⚡</span>
+      <div class="servicio-nombre">Reservas Automáticas</div>
+      <p class="servicio-desc">Sistema completo de gestión de reservas por WhatsApp. Responde, confirma, recuerda y gestiona cancelaciones sin que toques el teléfono.</p>
+      <div class="servicio-precio">120€ <span>/ mes</span></div>
+    </div>
+    <div class="servicio-card">
+      <span class="servicio-icon">∞</span>
+      <div class="servicio-nombre">Atención 24h</div>
+      <p class="servicio-desc">IA que responde preguntas frecuentes, horarios, carta, precios y cualquier consulta. Tu negocio atiende aunque estés cerrado.</p>
+      <div class="servicio-precio">120€ <span>/ mes</span></div>
+    </div>
+    <div class="servicio-card">
+      <span class="servicio-icon">◈</span>
+      <div class="servicio-nombre">Gestión de Pedidos</div>
+      <p class="servicio-desc">Automatización de pedidos online o a domicilio. El cliente pide, el sistema procesa y tú recibes la orden lista para preparar.</p>
+      <div class="servicio-precio">120€ <span>/ mes</span></div>
+    </div>
+    <div class="servicio-card">
+      <span class="servicio-icon">◻</span>
+      <div class="servicio-nombre">Página Web Profesional</div>
+      <p class="servicio-desc">Diseño y desarrollo web a medida. Moderna, rápida y optimizada para convertir visitas en clientes. Integrada con tus sistemas automáticos.</p>
+      <div class="servicio-precio">Desde 400€</div>
+    </div>
+    <div class="servicio-card">
+      <span class="servicio-icon">◯</span>
+      <div class="servicio-nombre">Sistema Completo</div>
+      <p class="servicio-desc">Reservas + atención 24h + seguimiento de clientes + recordatorios automáticos. Todo integrado. Precio especial para paquete completo.</p>
+      <div class="servicio-precio">200€ <span>/ mes</span></div>
+    </div>
+    <div class="servicio-card servicio-medida">
+      <span class="servicio-icon">◈</span>
+      <div class="servicio-nombre">Automatización a Medida</div>
+      <p class="servicio-desc">¿Tienes un proceso que quieres automatizar? Lo analizamos y construimos la solución exacta. Algunos ejemplos:</p>
+      <div class="medida-opciones">
+        <span class="medida-tag">Seguimiento de clientes</span>
+        <span class="medida-tag">Recordatorios automáticos</span>
+        <span class="medida-tag">Gestión de empleados</span>
+        <span class="medida-tag">Facturación automática</span>
+        <span class="medida-tag">CRM personalizado</span>
+        <span class="medida-tag">Marketing automático</span>
+        <span class="medida-tag">Reportes diarios</span>
+        <span class="medida-tag">Integración con tu app</span>
+      </div>
+      <a href="https://wa.me/32613957919?text=Hola,%20quiero%20consultar%20una%20automatización%20a%20medida" class="medida-cta">Consultar precio →</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-num">48h</div>
+      <div class="stat-label">De instalación</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">24/7</div>
+      <div class="stat-label">Disponibilidad</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">0€</div>
+      <div class="stat-label">Demo gratuita</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">+3K</div>
+      <div class="stat-label">Euros recuperados/mes</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROCESO -->
+<section class="proceso" id="proceso">
+  <span class="section-tag">Proceso</span>
+  <h2 class="section-title">
+    De cero a funcionando<br>
+    en <em>48 horas.</em>
+  </h2>
+  <div class="proceso-steps">
+    <div class="paso">
+      <div class="paso-num">01</div>
+      <div class="paso-content">
+        <div class="paso-titulo">Demo gratuita</div>
+        <p class="paso-desc">Te mostramos el sistema funcionando en vivo en 15 minutos. Mandamos un mensaje real a tu negocio y ves cómo responde solo. Sin compromiso.</p>
+        <div class="paso-tiempo">Día 1 · 15 minutos</div>
+      </div>
+    </div>
+    <div class="paso">
+      <div class="paso-num">02</div>
+      <div class="paso-content">
+        <div class="paso-titulo">Configuración a medida</div>
+        <p class="paso-desc">Adaptamos el sistema a tu negocio, tu tono, tus horarios y tus necesidades. No es un template genérico — es tu negocio en automático.</p>
+        <div class="paso-tiempo">Día 1-2 · Sin intervención tuya</div>
+      </div>
+    </div>
+    <div class="paso">
+      <div class="paso-num">03</div>
+      <div class="paso-content">
+        <div class="paso-titulo">Instalación y pruebas</div>
+        <p class="paso-desc">Conectamos el sistema a tu WhatsApp y canales. Hacemos pruebas completas hasta que todo funcione perfecto.</p>
+        <div class="paso-tiempo">Día 2 · 48h desde el inicio</div>
+      </div>
+    </div>
+    <div class="paso">
+      <div class="paso-num">04</div>
+      <div class="paso-content">
+        <div class="paso-titulo">Tu negocio trabaja solo</div>
+        <p class="paso-desc">A partir de aquí el sistema trabaja solo. Nosotros monitorizamos y mantenemos. Tú te centras en lo que importa.</p>
+        <div class="paso-tiempo">Siempre · Soporte incluido</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOBRE MÍ -->
+<section class="sobre" id="nosotros">
+  <div class="sobre-inner">
+    <div class="sobre-foto">
+      <div class="sobre-foto-placeholder">
+        <span class="sobre-foto-icon">◻</span>
+        <span class="sobre-foto-text">Tu foto aquí</span>
+      </div>
+      <div class="sobre-foto-badge">Barcelona, 2025</div>
+    </div>
+    <div class="sobre-texto">
+      <h3 class="sobre-nombre">Víctor,<br>fundador.</h3>
+      <div class="sobre-cargo">CEO · XOPIA Agency</div>
+      <p class="sobre-bio">
+        Con 20 años decidí que había una forma mejor de trabajar. Llevo meses especializándome en automatizaciones con inteligencia artificial para negocios de hostelería en Barcelona.
+        <br><br>
+        No vendemos tecnología por vender. Analizamos dónde pierde dinero tu negocio y lo solucionamos. Simple.
+      </p>
+      <div class="sobre-tags">
+        <span class="tag">n8n</span>
+        <span class="tag">WhatsApp API</span>
+        <span class="tag">Inteligencia Artificial</span>
+        <span class="tag">Barcelona</span>
+        <span class="tag">Hostelería</span>
+        <span class="tag">Automatización</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final">
+  <h2 class="cta-titulo">
+    ¿Cuánto dinero perdiste<br>
+    <em>esta semana?</em>
+  </h2>
+  <p class="cta-sub">
+    Te hacemos una demo en vivo en 15 minutos. Ves el sistema funcionando. Sin compromiso.
+  </p>
+  <a href="https://wa.me/32613957919?text=Hola,%20quiero%20ver%20la%20demo%20de%20XOPIA" class="cta-whatsapp">
+    <span>📱</span>
+    Ver demo por WhatsApp
+  </a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-logo">XOPIA</span>
+  <div class="footer-links">
+    <a href="#servicios">Servicios</a>
+    <a href="#proceso">Proceso</a>
+    <a href="#nosotros">Nosotros</a>
+    <a href="https://wa.me/32613957919">Contacto</a>
+  </div>
+  <span class="footer-copy">© 2025 XOPIA Agency · Barcelona</span>
+</footer>
+
+<script>
+  // Cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mouseX = 0, mouseY = 0;
+  let ringX = 0, ringY = 0;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    cursor.style.left = mouseX + 'px';
+    cursor.style.top = mouseY + 'px';
+  });
+
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.12;
+    ringY += (mouseY - ringY) * 0.12;
+    ring.style.left = ringX + 'px';
+    ring.style.top = ringY + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  // Hover effect on links
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.transform = 'translate(-50%, -50%) scale(2)';
+      ring.style.width = '48px';
+      ring.style.height = '48px';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+      ring.style.width = '28px';
+      ring.style.height = '28px';
+    });
+  });
+
+  // Fade in on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.problema-item, .servicio-card, .paso, .stat-item').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
